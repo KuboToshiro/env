@@ -1,0 +1,192 @@
+scriptencoding utf-8
+" vim:set ts=8 sts=2 sw=2 tw=0: (この行に関しては:help modelineを参照)
+" let $PATH = substitute($PATH, ';T:\\cygwin\\bin', '', '')
+
+let g:gvimrc_local_finish = 1
+
+"---------------------------------------------------------------------------
+" color設定:
+"colorscheme koehler
+colorscheme zellner
+
+"---------------------------------------------------------------------------
+" フォント設定:
+"
+if has('win32')
+  " Windows用
+  set guifont=MS_Gothic:h10:cSHIFTJIS
+  "set guifont=MS_Mincho:h10:cSHIFTJIS
+  " 行間隔の設定
+  set linespace=1
+  " 一部のUCS文字の幅を自動計測して決める
+  if has('kaoriya')
+    set ambiwidth=auto
+  endif
+elseif has('mac')
+  set guifont=Osaka－等幅:h14
+elseif has('xfontset')
+  " UNIX用 (xfontsetを使用)
+  set guifontset=a14,r14,k14
+endif
+
+"---------------------------------------------------------------------------
+" ウインドウに関する設定:
+"
+" ウインドウの幅
+set columns=180
+" ウインドウの高さ
+set lines=70
+" コマンドラインの高さ(GUI使用時)
+set cmdheight=2
+" 画面を黒地に白にする (次行の先頭の " を削除すれば有効になる)
+"colorscheme evening " (GUI使用時)
+
+"---------------------------------------------------------------------------
+" マウスに関する設定:
+"
+" 解説:
+" mousefocusは幾つか問題(一例:ウィンドウを分割しているラインにカーソルがあっ
+" ている時の挙動)があるのでデフォルトでは設定しない。Windowsではmousehide
+" が、マウスカーソルをVimのタイトルバーに置き日本語を入力するとチラチラする
+" という問題を引き起す。
+"
+" どのモードでもマウスを使えるようにする
+set mouse=a
+" マウスの移動でフォーカスを自動的に切替えない (mousefocus:切替る)
+set nomousefocus
+" 入力時にマウスポインタを隠す (nomousehide:隠さない)
+set mousehide
+" ビジュアル選択(D&D他)を自動的にクリップボードへ (:help guioptions_a)
+" set guioptions+=a
+set clipboard=unnamed
+
+"---------------------------------------------------------------------------
+" メニューに関する設定:
+"
+" 解説:
+" "M"オプションが指定されたときはメニュー("m")・ツールバー("T")供に登録され
+" ないので、自動的にそれらの領域を削除するようにした。よって、デフォルトのそ
+" れらを無視してユーザが独自の一式を登録した場合には、それらが表示されないと
+" いう問題が生じ得る。しかしあまりにレアなケースであると考えられるので無視す
+" る。
+
+" メニューを消す (クリップボード貼り付けがキーボードからできるようになるまで保留）
+" set guioptions-=m
+
+if &guioptions =~# 'M'
+  let &guioptions = substitute(&guioptions, '[mT]', '', 'g')
+endif
+
+"---------------------------------------------------------------------------
+" その他、見栄えに関する設定:
+"
+" 検索文字列をハイライトしない(_vimrcではなく_gvimrcで設定する必要がある)
+"set nohlsearch
+
+"---------------------------------------------------------------------------
+" 印刷に関する設定:
+"
+" 注釈:
+" 印刷はGUIでなくてもできるのでvimrcで設定したほうが良いかもしれない。この辺
+" りはWindowsではかなり曖昧。一般的に印刷には明朝、と言われることがあるらし
+" いのでデフォルトフォントは明朝にしておく。ゴシックを使いたい場合はコメント
+" アウトしてあるprintfontを参考に。
+"
+" 参考:
+"   :hardcopy
+"   :help 'printfont'
+"   :help printing
+"
+" 印刷用フォント
+if has('printer')
+  if has('win32')
+    set printfont=MS_Mincho:h12:cSHIFTJIS
+  endif
+endif
+
+set helpheight=40
+set nows
+set nobackup
+set noic
+set textwidth=0
+
+let format_join_spaces = 2
+let format_allow_over_tw = 0 
+
+set nosmartcase
+set makeprg=nmake
+
+set tags=./tags;
+
+if has("autocmd")
+ autocmd FileType vb       set tabstop=4 shiftwidth=4 expandtab
+ autocmd FileType perl     set tabstop=4 shiftwidth=4
+ autocmd FileType html     set tabstop=2 shiftwidth=2 expandtab
+ autocmd FileType jsp      set tabstop=2 shiftwidth=2 expandtab
+ autocmd FileType cfg      set fileencoding=sjis
+ autocmd FileType ruby     set dictionary=$HOME/dic/ruby.dict tabstop=2 shiftwidth=2 expandtab
+ autocmd FileType ruby     set tags=./tags,$HOME/doc/ruby-man/ruby.tags;
+ autocmd FileType java     set dictionary=$HOME/dic/j2se14.dict
+ autocmd FileType java     set tags=./tags,$JAVA_HOME/docs/java.tags;
+ autocmd FileType java     set tabstop=2 shiftwidth=2 expandtab
+ autocmd FileType cs       set tabstop=4 shiftwidth=4 expandtab
+ autocmd FileType cs       set dictionary=$HOME/dic/cs.dict
+ autocmd FileType cs       map <F9> :e $HOME/dic/cs_class.dict<cr>
+
+ autocmd BufNewFile,BufRead *.frm set filetype=vb
+ autocmd BufNewFile,BufRead *.bas set filetype=vb
+ autocmd BufNewFile,BufRead *.cls set filetype=vb
+
+ augroup cprog
+  au!
+
+  autocmd FileType *      set formatoptions=tcql nocindent comments&
+  autocmd FileType c,cpp  set formatoptions=croql cindent comments=sr:/*,mb:*,el:*/,:// dictionary=c:$HOME/dic/cpp.dict
+  autocmd FileType c,cpp  set tabstop=4 shiftwidth=4 expandtab
+ augroup END
+
+endif " has("autocmd")
+
+" エラーリスト (":cc 番号" でエラーの場所にジャンプする)
+map <F3> :cl<cr>
+
+" 現在のエラー
+map <F4> :cc<cr>
+
+" 前のエラー
+map <F5> :cp<cr>
+
+" 次のエラー
+map <F6> :cn<cr>
+
+nnoremap <F7> :!start rundll32 url.dll,FileProtocolHandler %:p<cr>
+
+nnoremap <F8> :!start rundll32 url.dll,FileProtocolHandler %:p<cr>
+
+map <F11> :N<cr>
+
+map <F12> :n<cr>
+
+map Y :e $HOME/memo.txt<cr>
+source $VIMRUNTIME/macros/matchit.vim
+
+set lcs=tab:>-,eol:$
+
+set isfname+=32
+
+cnoremap <F10> e ++enc=euc-jp
+cnoremap <F11> e ++enc=shift-jis
+cnoremap <F12> e ++enc=utf8
+
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,iso-2022-jp,sjis,euc-jp,cp932,utf-16,utf-16le
+
+let g:netrw_localcopycmd="cp"
+
+" ステータスラインの設定:http://opentechpress.jp/developer/07/11/06/0151231.shtml
+set statusline=%t\%=[%{&ff}]\[%{&fileencoding}][%l,%v]
+" ステータスライン表示位置(下から)
+set laststatus=2
+
+set noundofile
+

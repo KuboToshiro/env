@@ -1,0 +1,229 @@
+# _nya は NYAOS の初期設定ファイルです.
+#   (1) NYAOS.EXE のあるディレクトリ
+#   (2) %HOME% の下(未定義であれば %USERPROFILE%)
+#   (3) カレントディレクトリ
+# にある _nya を「順に全て」呼び出します.
+# ※ ただし、(1)==(3) の場合等は、(3)を呼び出しません.
+#
+# 通常
+#    - NYAOS.EXE に添付の _nya (当ファイル) は (1) へ
+#    - そのユーザで定義する設定は (2) へ
+# 配置してください.
+
+if /%OS%/ == /Windows_NT/ then
+    alias  kill  taskkill /pid
+    alias  kill9 taskkill /f /pid
+    alias  ps    tasklist
+    suffix vbs   cscript //nologo
+    suffix js    cscript //nologo
+endif
+
+suffix ny  nyaos -f
+suffix pl  T:\Perl\bin\perl.exe
+suffix py  python
+suffix rb  ruby
+suffix scm gosh
+suffix sh  bash
+suffix jar java -jar
+suffix lua lua
+suffix awk awk -f
+suffix vbs cscript
+suffix js  cscript
+
+option +backquote
+option +history
+option +nullcomplete
+option +tilde
+option +glob
+# option prompt $e[31;40;1m[$w]$_$$ $e[37;1m
+option prompt $e[31;40;1m[$p]$e[37;1m
+option uncompletechar ,;=``
+
+foreach i (type md rd start )
+    alias $i $COMSPEC /c $i
+end
+
+set HOME_LOCAL=T:\home\local
+set HOME_BIN=T:\home\bin
+set C_INCLUDE_PATH = T:\MinGW\include
+set CPLUS_INCLUDE_PATH = T:\MinGW\include
+set LIBRARY_PATH = T:\MinGW\lib
+set LV=-Is -Ou8
+
+alias cp cp -i
+alias rm rm -i
+alias mv mv -i
+alias ll ls -l
+alias la ls -a
+alias lla ls -al
+alias zipinfo unzip -l
+alias vi T:\tools\gvim\gvim.exe
+alias date T:\cygwin\bin\date
+# alias sakura ""C:\Program Files\sakura\sakura.exe""
+alias sakura T:\tools\sakura\sakura.exe
+alias mail ""C:\Program Files\Mozilla Thunderbird\thunderbird.exe""
+alias ff ""C:\Program Files\Mozilla Firefox\firefox.exe""
+alias ie ""C:\Program Files\Internet Explorer\iexplore.exe""
+alias e explorer
+alias winmerge T:\tools\WinMergePortable\WinMergePortable.exe
+alias refe D:\Home\kubo\doc\ruby-refm\refe-1_9_3.cmd
+
+alias cddoc  cd ""%USERPROFILE%""
+alias cddesk cd C:\Users\%USERNAME%\Desktop
+alias cddown cd C:\Users\%USERNAME%\Downloads
+alias cdbin  cd $HOME_BIN
+
+alias odhex  T:\cygwin\bin\od -Ax -tx1z -v
+
+alias ej  ej.rb
+alias je  je.rb
+
+utf8{
+    set RUBYOPT=-EUTF-8:UTF-8
+    set LANG=ja_JP.UTF-8
+    set LC_CTYPE=ja_JP.UTF-8
+    set LC_ALL=ja_JP.UTF-8
+}
+
+sjis{
+    set RUBYOPT=-EWindows-31J:Windows-31J
+    set LANG=ja_JP.SJIS
+    set LC_CTYPE=ja_JP.SJIS
+    set LC_ALL=ja_JP.SJIS
+}
+
+sjis
+
+# NT版 UNIX-like tools
+# alias date  cdate
+#alias echo  fecho
+#alias find  findf
+#alias join  joinf
+#alias mkdir makedir
+#alias rmdir removedir
+#alias man   tman
+
+alias makedbg MSBuild /nologo /t:build /p:Configuration=Debug /v:m /fl /flp:LogFile=make.log;Append;Verbosity=d
+alias makerel MSBuild /nologo /t:build /p:Configuration=Release /v:m /fl /flp:LogFile=make.log;Append;Verbosity=d
+alias makecleandbg MSBuild /nologo /t:clean /p:Configuration=Debug /v:m /fl /flp:LogFile=make.log;Append;Verbosity=d
+alias makecleanrel MSBuild /nologo /t:clean /p:Configuration=Release /v:m /fl /flp:LogFile=make.log;Append;Verbosity=d
+
+# grep (shit-jis)
+alias gg grep.rb
+
+# grep (utf-8)
+alias gg grep.rb -u
+
+foreach cmd (dir copy move del rename ren del)
+    $cmd{
+        if %glob.defined% -ne 0 then
+            option -glob
+            $COMSPEC /c $0 $*
+            option +glob
+        else
+            $COMSPEC /c $0 $*
+        endif
+    }
+end
+
+bindkey CTRL_P vzlike-previous-history
+bindkey CTRL_N vzlike-next-history
+
+### Vzライクなキーバインドにする関数
+### 利用時には「vzbind」とだけの行を入れてください。
+vzbind{
+    bindkey CTRL_R xscript:start            xscript:pageup
+    bindkey CTRL_S backward                 xscript:backward
+    bindkey CTRL_D forward                  xscript:forward
+    bindkey CTRL_E vzlike-previous-history  xscript:previous
+    bindkey CTRL_X vzlike-next-history      xscript:next
+    bindkey CTRL_F forward-word
+    bindkey CTRL_A backward-word
+}
+# vzbind
+
+alias mingw set PATH=T:\tools\MinGW\mingw32\bin;T:\tools\MinGW\bin;T:\tools\MinGW\msys\1.0\bin;%HOME_LOCAL%\bin;%HOME_BIN%;%HOME_BIN%\gauche;T:\tools\ImageMagick;T:\tools\7-ZipPortable\App\7-Zip;T:\tools\Git\cmd;T:\Ruby\bin;T:\Python34;T:\tools\Go\bin;T:\tools\ntuxt\bin;T:\cygwin\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0
+
+set PATH=.;%HOME_LOCAL%\bin;%HOME_BIN%;%HOME_BIN%\gauche;T:\tools\ImageMagick;T:\tools\7-ZipPortable\App\7-Zip;T:\tools\Git\cmd;T:\Ruby\bin;T:\Python34;T:\tools\Go\bin;T:\tools\ntuxt\bin;T:\cygwin\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0
+
+# set CLASSPATH=C:\JAVA_LIB\ojdbc14.jar;$CLASSPATH
+set CYGWIN=$CYGWIN nodosfilewarning
+
+vcenv9{
+    set VSINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 9.0
+    set VCINSTALLDIR=%VSINSTALLDIR%\VC
+    set DevEnvDir=%VSINSTALLDIR%\Common7\IDE
+    set Framework35Version=v3.5
+    set FrameworkDir=C:\Windows\Microsoft.NET\Framework
+    set FrameworkVersion=v2.0.50727
+    set WindowsSdkDir=C:\Program Files\Microsoft SDKs\Windows\v6.0A\
+    set INCLUDE=%VCINSTALLDIR%\INCLUDE;%WindowsSdkDir%include;
+    set LIB=%VCINSTALLDIR%\LIB;%WindowsSdkDir%lib;
+    set LIBPATH=%FrameworkDir%\%Framework35Version%;%FrameworkDir%\%FrameworkVersion%;%VCINSTALLDIR%\LIB;
+    set Path=%DevEnvDir%;%VCINSTALLDIR%\BIN;%VSINSTALLDIR%\Common7\Tools;%FrameworkDir%\v3.5;%FrameworkDir%\v2.0.50727;%VCINSTALLDIR%\VCPackages;%WindowsSdkDir%bin;C:\ProgramData\Oracle\Java\javapath;%HOME_LOCAL%\bin;%HOME_BIN%;%HOME_BIN%\gauche;T:\tools\ImageMagick;T:\tools\7-ZipPortable\App\7-Zip;T:\tools\Git\cmd;T:\Ruby\bin;T:\Python34;T:\tools\Go\bin;T:\tools\ntuxt\bin;T:\cygwin\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;.
+}
+
+vcenv10{
+    set VSINSTALLDIR=C:\Program Files (x86)\Microsoft Visual Studio 10.0\
+    set VCINSTALLDIR=%VSINSTALLDIR%\VC
+    set DevEnvDir=%VSINSTALLDIR%\Common7\IDE
+    set Framework35Version=v3.5
+    set FrameworkDIR32=C:\Windows\Microsoft.NET\Framework\
+    set FrameworkVersion=v4.0.30319
+    set FrameworkVersion32=v4.0.30319
+    set WindowsSdkDir=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\
+    set INCLUDE=%VCINSTALLDIR%\INCLUDE;%WindowsSdkDir%include;
+    set LIB=%VCINSTALLDIR%\LIB;%WindowsSdkDir%lib;
+    set LIBPATH=%FrameworkDIR32%%FrameworkVersion%;%FrameworkDIR32%%Framework35Version%;%VCINSTALLDIR%\LIB;
+    set Path=%VSINSTALLDIR%VSTSDB\Deploy;%VSINSTALLDIR%Common7\IDE\;%VCINSTALLDIR%\BIN;%VSINSTALLDIR%Common7\Tools;%FrameworkDIR32%%FrameworkVersion%;%FrameworkDIR32%%Framework35Version%;%VCINSTALLDIR%\VCPackages;%WindowsSdkDir%bin\NETFX 4.0 Tools;%WindowsSdkDir%bin;C:\ProgramData\Oracle\Java\javapath;%HOME_LOCAL%\bin;%HOME_BIN%;%HOME_BIN%\gauche;T:\tools\ImageMagick;T:\tools\7-ZipPortable\App\7-Zip;T:\tools\Git\cmd;T:\Ruby\bin;T:\Python34;T:\tools\Go\bin;T:\tools\ntuxt\bin;T:\cygwin\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;.
+}
+
+# change directory (clipboard)
+cdc{
+    set P=`fullpath.exe`
+    cd "$P"
+}
+
+# change directory (dyna)
+alias cdd cdd.rb -d
+
+lua_e "
+    --- NYAOS 終了時のフック ---
+    function nyaos.goodbye.message()
+        print('Good bye !!')
+    end
+
+    -- キーフックサンプル --
+    -- (「nyaos.keyhook = sample_keyhook」で利用可能)
+    function sample_keyhook(t)
+        if t.key == nyaos.key.F1 and t.text == '' then
+            return os.getenv('EDITOR') or 'notepad',true
+        end
+        return nil
+    end
+
+    -- コマンドラインフィルターサンプル:「$lua(…)」(括弧内はLua式) --
+    -- (「nyaos.filter.sample = sample_filter」で利用可能になる)
+    function sample_filter(cmdline)
+        return cmdline:gsub('$lua(%b())',function(m)
+            local status,result=pcall( loadstring('return '..m) )
+            if status then
+                return result
+            else
+                print('Ignore invalid Lua expression: '..m)
+                return false;
+            end
+        end)
+    end
+
+    function nyaos.prompt(p)
+        local prompt_wk = ''
+        if os.getenv('LANG') == 'ja_JP.UTF-8' then
+	    prompt_wk = '$e[36;40;1m[$p]$e[37;1m'
+        else
+	    prompt_wk = '$e[32;40;1m[$p]$e[37;1m'
+        end
+        return true, prompt_wk
+    end
+"
+
