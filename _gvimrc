@@ -33,7 +33,7 @@ endif
 " ウインドウに関する設定:
 "
 " ウインドウの幅
-set columns=180
+set columns=170
 " ウインドウの高さ
 set lines=70
 " コマンドラインの高さ(GUI使用時)
@@ -124,9 +124,8 @@ if has("autocmd")
  autocmd FileType html     set tabstop=2 shiftwidth=2 expandtab
  autocmd FileType jsp      set tabstop=2 shiftwidth=2 expandtab
  autocmd FileType cfg      set fileencoding=sjis
- autocmd FileType ruby     set dictionary=$HOME/dic/ruby.dict tabstop=2 shiftwidth=2 expandtab
- autocmd FileType ruby     set tags=./tags,$HOME/doc/ruby-man/ruby.tags;
- autocmd FileType java     set dictionary=$HOME/dic/j2se14.dict
+ autocmd FileType ruby     set dictionary=T:/home/dic/ruby.dict tabstop=2 shiftwidth=2 expandtab
+ autocmd FileType ruby     set tags=./tags,T:/home/doc/ruby-man/ruby.tags;
  autocmd FileType java     set tags=./tags,$JAVA_HOME/docs/java.tags;
  autocmd FileType java     set tabstop=2 shiftwidth=2 expandtab
  autocmd FileType cs       set tabstop=4 shiftwidth=4 expandtab
@@ -159,9 +158,8 @@ map <F5> :cp<cr>
 " 次のエラー
 map <F6> :cn<cr>
 
-nnoremap <F7> :!start rundll32 url.dll,FileProtocolHandler %:p<cr>
-
-nnoremap <F8> :!start rundll32 url.dll,FileProtocolHandler %:p<cr>
+nnoremap <F7> :!cscript T:\home\bin\run_firefox.vbs %:p<cr>
+nnoremap <F8> :!cscript T:\home\bin\run_firefox.vbs %:p<cr>
 
 map <F11> :N<cr>
 
