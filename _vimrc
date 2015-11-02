@@ -86,9 +86,6 @@ NeoBundleLazy 'Shougo/vimproc', {
       \ }
 
 NeoBundle 'Shougo/unite.vim'
-" NeoBundleLazy 'Shougo/unite.vim' , {
-" \   'autoload' : { 'commands' : [ 'Unite' ] }
-" \ }
 let s:bundle = neobundle#get('unite.vim')
 function! s:bundle.hooks.on_source(bundle)
   let g:unite_enable_start_insert=0
